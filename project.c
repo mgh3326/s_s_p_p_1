@@ -14,7 +14,7 @@ int runcommand(char **cline);
 int no_pipe_run_command(char *Arr[]);
 int one_pipe_run_command(char *Arr[], int command_index);
 void parse_redirect(char* Arr[]);
-void tab();
+int tab();
 int double_tab();
 static char temp[500];
 int count;
@@ -200,7 +200,7 @@ int main(void)
 	//fflush(stdin); // 키보드 버퍼를 모두 비워주는 함수
 
 }
-void tab() {
+int tab() {
 	char * d;
 
 	d = NULL;
@@ -245,6 +245,7 @@ void tab() {
 	// }
 	// printf("\n");
 	int index = 0;
+	int oh_count=0;
 	char *Arr[100] = {
 		NULL,
 	}; // 크기가 10인 문자열 포인터 배열을 선언하고 NULL로 초기화
@@ -264,17 +265,56 @@ void tab() {
 		}
 		closedir(dir_info);
 	}
-	printf("test\n");
+	
 	for (int i = 0; i < index; i++)
 	{
 		// printf("%s\n",Arr[i]);
 		if (strcmp(oh, Arr[i]) == 0)
 		{
-			printf("\n같애요\n");//이러면 가만히있으면 되는거야
+			return 0;
+			//break;//탈출
 		}
 	}
-	fflush(stdout);
+		for (int i = 0; i < index; i++)
+		{
+		if(strncmp(oh,Arr[i],temp_count-1)==0)
+			{
+				//printf("\n%s\n",Arr[i]);
+				oh_count++;
+			}
+		}
+		//printf("(%d)\n",oh_count);
+		if(oh_count>1)//여러개 있을 때
+		{
+			printf("ohoh222222222222\n");
 
+		}
+		else if(oh_count==1)
+		{
+			//printf("1개야 1개\n");
+			int i_one=0;
+		for (i_one = 0; i_one < index; i_one++)
+		{
+		if(strncmp(oh,Arr[i_one],temp_count-1)==0)
+			{
+				//printf("ohoh\n");
+				break;
+			}
+		}
+					//printf("test\n%s\n",Arr[i_one]);
+					for(int i=temp_count-1;i<strlen(Arr[i_one]);i++)
+					{
+						printf("%c",Arr[i_one][i]);
+						temp[count++]=Arr[i_one][i];
+					}
+					
+		}
+		else{
+			printf("리턴이야 리턴\n");
+			return 0;
+		}
+	fflush(stdout);
+	return 0;
 
 }
 int double_tab() {
