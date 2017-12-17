@@ -57,9 +57,69 @@ int main(void)
 			if (c == '\t')
 			{
 				tab();
-				//c='\0';
-				continue;
-				c = getch();
+				c='\0';
+				c= getch();
+				if(c=='\t')
+				{
+					c='\0';
+					double_tab();
+					for(int i=0;i<count;i++)
+					{
+						printf("%c",temp[i]);
+					}
+				}
+				
+				else
+				{
+
+					if (c == 127)
+					{
+						if (count > 0)
+						{
+							printf("\b");
+							temp[--count] = '\0';
+							printf(" ");
+							printf("\b");
+							continue;
+						}
+					}
+					else
+					{
+						printf("%c", c);
+						temp[count] = c;
+						count++;
+						//continue;
+					}
+
+					if (c == '\n')
+					{
+						if (count == 1)
+						{
+							temp[--count] = '\0';
+							printf("User Shall >>");
+							continue;
+						}
+						//temp[count]='\0';
+						//for(int i=0;i<count-1;i++)
+						//printf("%c",temp[i]);
+						input = (char *)malloc(sizeof(char) * (count));
+						for (int i = 0; i < count; i++)
+						{
+							input[i] = '\0';
+						}
+						for (int i = 0; i < count - 1; i++)
+						{
+							input[i] = temp[i];
+						}
+						//count++;
+						break;
+		
+					}
+
+					continue;
+					
+				}
+				//c = getch();
 				// if (c == '\t')
 				// {
 				//    double_tab();
@@ -145,8 +205,9 @@ int main(void)
 
 		if (strcmp(command_Arr[0], "q") == 0)
 		{
-			printf("쉘을 종료합니다.\n");
+			//printf("쉘을 종료합니다.\n");
 			exit(0); //종료
+			exit(1);
 		}
 		for (int i = 0; i < command_index; i++)
 		{
@@ -212,7 +273,7 @@ int tab() {
 	// char_array[0]='\0';
 	for (int i = 0; i < count; i++)
 	{
-		if (temp[count - i] == '/')
+		if (temp[count - i] == '/' || temp[count - i] == ' ')
 		{
 			temp_index = count - i;
 			break;
@@ -284,10 +345,93 @@ int tab() {
 			}
 		}
 		//printf("(%d)\n",oh_count);
+		// char ** temp_Arr;
+		// temp_Arr = (char **)malloc(oh_count * sizeof(char *));
+
+		int num=oh_count;
+		int oh_index=0;
+		int *equal_index;
+		equal_index=(int*)malloc(sizeof(int)*index);
 		if(oh_count>1)//여러개 있을 때
 		{
-			printf("ohoh222222222222\n");
+			for (int i= 0; i < index; i++)
+			{
+			if(strncmp(oh,Arr[i],temp_count-1)==0)
+				{
+					//printf("(%s)(%s)\n",oh,Arr[i]);
+					// temp_Arr[oh_index] = (char *)malloc((strlen(Arr[i])+1) * sizeof(char));
+					// temp_Arr[oh_index][strlen(Arr[i])+1]='\0';
+					// temp_Arr[oh_index]=Arr[i];
+					equal_index[oh_index]=i;
+					oh_index++;
+					//printf("ohoh\n");
+					//break;
+				}
+			}
+			equal_index[oh_index]='\0';
+			int k=0;
+			int t=0;
 
+			while(1)
+			{
+
+			
+			for(int i=1;i<oh_index;i++)
+			{
+				//printf("\n(%s)",Arr[equal_index[i]]);
+				
+				if(strncmp(Arr[equal_index[0]],Arr[equal_index[i]],k)!=0)
+				{
+					t=1;
+					break;
+				}
+				if(i==oh_index-1)
+				{
+					
+					k++;
+				}
+			}
+			if(t==1)
+			break;
+		}
+			for(int i=strlen(oh);i<k-1;i++)
+			{
+				printf("%c",Arr[equal_index[0]][i]);
+				temp[count++]=Arr[equal_index[0]][i];
+			}
+			//같은놈들 모아둔거
+			//printf("test\n");
+			// int yes_index=0;
+			// int j=0;
+			// int r=0;
+			// while(1)
+			// {
+			// 	for(int i=1;i<oh_count;i++)
+			// 	{
+			// 		printf("\n(%s)(%s)\n",temp_Arr[0],temp_Arr[i]);
+			// 		if(strncmp(temp_Arr[0],temp_Arr[i],++j)!=0)
+			// 		{r=1;
+			// 			break;}
+			// 		if(i==oh_count-1)
+			// 		yes_index++;
+
+			// 		//free(temp_Arr[i]); 왜 free가 안되지
+			// 	}
+			// 	if(r==1)
+			// 	break;
+			// }
+
+			// printf("test(%d)\n",yes_index);
+			// for(int i=strlen(oh);i<yes_index+1;i++)
+			// {
+			// 	printf("%c",temp_Arr[0][i]);
+			// 	temp[count++]=temp_Arr[0][i];
+			// }
+
+				
+						  
+				
+					 
 		}
 		else if(oh_count==1)
 		{
@@ -310,9 +454,12 @@ int tab() {
 					
 		}
 		else{
-			printf("리턴이야 리턴\n");
+			//printf("리턴이야 리턴\n");
 			return 0;
 		}
+		
+		//free(temp_Arr);
+		free(equal_index);
 	fflush(stdout);
 	return 0;
 
@@ -403,6 +550,7 @@ void parse_redirect(char* Arr[])
 	}
 
 }
+
 int one_pipe_run_command(char *Arr[], int command_index)
 {
 	pid_t childpid;

@@ -1,0 +1,14 @@
+합계 112
+-rw-r--r-- 1 moon moon     0 Dec 16 19:53 a
+-rwxrwxr-x 1 moon moon 14352 Dec 16 19:57 a.out
+-rw-r--r-- 1 moon moon     0 Dec 16 19:53 cat
+drwxrwxr-x 2 moon moon  4096 Dec 16 15:28 class_11_8
+drwxrwxr-x 2 moon moon  4096 Dec 16 15:28 class_9_20
+-rw-rw-r-- 1 moon moon    12 Dec 12 18:29 file1
+-rw-r--r-- 1 moon moon     0 Dec 16 19:58 file2
+-rw-rw-r-- 1 moon moon  4093 Dec 12 18:29 jk.c
+drwxrwxr-x 7 moon moon  4096 Dec 16 15:59 new
+-rw-r--r-- 1 moon moon    88 Dec 16 19:57 oh
+-rw-rw-r-- 1 moon moon  8213 Dec 16 19:55 project.c
+-rw-rw-r-- 1 moon moon  3871 Dec  1 12:29 smallsh.c
+-rw-rw-r-- 1 moon moon   218 Dec  1 12:29 smallsh.h
