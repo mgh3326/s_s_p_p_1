@@ -17,7 +17,10 @@ void parse_redirect(char* Arr[]);
 int tab();
 int double_tab();
 static char temp[500];
+static int AMPERSAND_count;
 int count;
+void execute_cmd(char* Arr[],int ohoh);
+void execute_cmdgrp(char* Arr[]);
 void signal_handler(int signo) {
 	if (signo == SIGINT)
 	{
@@ -57,18 +60,18 @@ int main(void)
 			if (c == '\t')
 			{
 				tab();
-				c='\0';
-				c= getch();
-				if(c=='\t')
+				c = '\0';
+				c = getch();
+				if (c == '\t')
 				{
-					c='\0';
+					c = '\0';
 					double_tab();
-					for(int i=0;i<count;i++)
+					for (int i = 0; i < count; i++)
 					{
-						printf("%c",temp[i]);
+						printf("%c", temp[i]);
 					}
 				}
-				
+
 				else
 				{
 
@@ -113,11 +116,11 @@ int main(void)
 						}
 						//count++;
 						break;
-		
+
 					}
 
 					continue;
-					
+
 				}
 				//c = getch();
 				// if (c == '\t')
@@ -201,7 +204,7 @@ int main(void)
 
 
 		int pipe_count = 0;
-		int AMPERSAND_count = 0;
+		AMPERSAND_count = 0;
 
 		if (strcmp(command_Arr[0], "q") == 0)
 		{
@@ -220,6 +223,8 @@ int main(void)
 			if (strcmp(command_Arr[i], "&") == 0) // 문자열 포인터 배열의 요소가 NULL이 아닐 때만
 			{
 				AMPERSAND_count++;
+				command_Arr[i] = NULL;
+				command_index--;
 				//printf("test\n");
 			}
 			//printf("%s ", command_Arr[i]); // 문자열 포인터 배열에 인덱스로 접근하여 각 문자열 출력
@@ -306,7 +311,7 @@ int tab() {
 	// }
 	// printf("\n");
 	int index = 0;
-	int oh_count=0;
+	int oh_count = 0;
 	char *Arr[100] = {
 		NULL,
 	}; // 크기가 10인 문자열 포인터 배열을 선언하고 NULL로 초기화
@@ -326,7 +331,7 @@ int tab() {
 		}
 		closedir(dir_info);
 	}
-	
+
 	for (int i = 0; i < index; i++)
 	{
 		// printf("%s\n",Arr[i]);
@@ -336,138 +341,181 @@ int tab() {
 			//break;//탈출
 		}
 	}
+	for (int i = 0; i < index; i++)
+	{
+		if (strncmp(oh, Arr[i], temp_count - 1) == 0)
+		{
+			//printf("\n%s\n",Arr[i]);
+			oh_count++;
+		}
+	}
+	//printf("(%d)\n",oh_count);
+	// char ** temp_Arr;
+	// temp_Arr = (char **)malloc(oh_count * sizeof(char *));
+
+	int num = oh_count;
+	int oh_index = 0;
+	int *equal_index;
+	equal_index = (int*)malloc(sizeof(int)*index);
+	if (oh_count > 1)//여러개 있을 때
+	{
 		for (int i = 0; i < index; i++)
 		{
-		if(strncmp(oh,Arr[i],temp_count-1)==0)
+			if (strncmp(oh, Arr[i], temp_count - 1) == 0)
 			{
-				//printf("\n%s\n",Arr[i]);
-				oh_count++;
+				//printf("(%s)(%s)\n",oh,Arr[i]);
+				// temp_Arr[oh_index] = (char *)malloc((strlen(Arr[i])+1) * sizeof(char));
+				// temp_Arr[oh_index][strlen(Arr[i])+1]='\0';
+				// temp_Arr[oh_index]=Arr[i];
+				equal_index[oh_index] = i;
+				oh_index++;
+				//printf("ohoh\n");
+				//break;
 			}
 		}
-		//printf("(%d)\n",oh_count);
-		// char ** temp_Arr;
-		// temp_Arr = (char **)malloc(oh_count * sizeof(char *));
+		equal_index[oh_index] = '\0';
+		int k = 0;
+		int t = 0;
 
-		int num=oh_count;
-		int oh_index=0;
-		int *equal_index;
-		equal_index=(int*)malloc(sizeof(int)*index);
-		if(oh_count>1)//여러개 있을 때
+		while (1)
 		{
-			for (int i= 0; i < index; i++)
-			{
-			if(strncmp(oh,Arr[i],temp_count-1)==0)
-				{
-					//printf("(%s)(%s)\n",oh,Arr[i]);
-					// temp_Arr[oh_index] = (char *)malloc((strlen(Arr[i])+1) * sizeof(char));
-					// temp_Arr[oh_index][strlen(Arr[i])+1]='\0';
-					// temp_Arr[oh_index]=Arr[i];
-					equal_index[oh_index]=i;
-					oh_index++;
-					//printf("ohoh\n");
-					//break;
-				}
-			}
-			equal_index[oh_index]='\0';
-			int k=0;
-			int t=0;
 
-			while(1)
-			{
 
-			
-			for(int i=1;i<oh_index;i++)
+			for (int i = 1; i < oh_index; i++)
 			{
 				//printf("\n(%s)",Arr[equal_index[i]]);
-				
-				if(strncmp(Arr[equal_index[0]],Arr[equal_index[i]],k)!=0)
+
+				if (strncmp(Arr[equal_index[0]], Arr[equal_index[i]], k) != 0)
 				{
-					t=1;
+					t = 1;
 					break;
 				}
-				if(i==oh_index-1)
+				if (i == oh_index - 1)
 				{
-					
+
 					k++;
 				}
 			}
-			if(t==1)
-			break;
+			if (t == 1)
+				break;
 		}
-			for(int i=strlen(oh);i<k-1;i++)
-			{
-				printf("%c",Arr[equal_index[0]][i]);
-				temp[count++]=Arr[equal_index[0]][i];
-			}
-			//같은놈들 모아둔거
-			//printf("test\n");
-			// int yes_index=0;
-			// int j=0;
-			// int r=0;
-			// while(1)
-			// {
-			// 	for(int i=1;i<oh_count;i++)
-			// 	{
-			// 		printf("\n(%s)(%s)\n",temp_Arr[0],temp_Arr[i]);
-			// 		if(strncmp(temp_Arr[0],temp_Arr[i],++j)!=0)
-			// 		{r=1;
-			// 			break;}
-			// 		if(i==oh_count-1)
-			// 		yes_index++;
-
-			// 		//free(temp_Arr[i]); 왜 free가 안되지
-			// 	}
-			// 	if(r==1)
-			// 	break;
-			// }
-
-			// printf("test(%d)\n",yes_index);
-			// for(int i=strlen(oh);i<yes_index+1;i++)
-			// {
-			// 	printf("%c",temp_Arr[0][i]);
-			// 	temp[count++]=temp_Arr[0][i];
-			// }
-
-				
-						  
-				
-					 
-		}
-		else if(oh_count==1)
+		for (int i = strlen(oh); i < k - 1; i++)
 		{
-			//printf("1개야 1개\n");
-			int i_one=0;
+			printf("%c", Arr[equal_index[0]][i]);
+			temp[count++] = Arr[equal_index[0]][i];
+		}
+		//같은놈들 모아둔거
+		//printf("test\n");
+		// int yes_index=0;
+		// int j=0;
+		// int r=0;
+		// while(1)
+		// {
+		// 	for(int i=1;i<oh_count;i++)
+		// 	{
+		// 		printf("\n(%s)(%s)\n",temp_Arr[0],temp_Arr[i]);
+		// 		if(strncmp(temp_Arr[0],temp_Arr[i],++j)!=0)
+		// 		{r=1;
+		// 			break;}
+		// 		if(i==oh_count-1)
+		// 		yes_index++;
+
+		// 		//free(temp_Arr[i]); 왜 free가 안되지
+		// 	}
+		// 	if(r==1)
+		// 	break;
+		// }
+
+		// printf("test(%d)\n",yes_index);
+		// for(int i=strlen(oh);i<yes_index+1;i++)
+		// {
+		// 	printf("%c",temp_Arr[0][i]);
+		// 	temp[count++]=temp_Arr[0][i];
+		// }
+
+
+
+
+
+	}
+	else if (oh_count == 1)
+	{
+		//printf("1개야 1개\n");
+		int i_one = 0;
 		for (i_one = 0; i_one < index; i_one++)
 		{
-		if(strncmp(oh,Arr[i_one],temp_count-1)==0)
+			if (strncmp(oh, Arr[i_one], temp_count - 1) == 0)
 			{
 				//printf("ohoh\n");
 				break;
 			}
 		}
-					//printf("test\n%s\n",Arr[i_one]);
-					for(int i=temp_count-1;i<strlen(Arr[i_one]);i++)
-					{
-						printf("%c",Arr[i_one][i]);
-						temp[count++]=Arr[i_one][i];
-					}
-					
+		//printf("test\n%s\n",Arr[i_one]);
+		for (int i = temp_count - 1; i < strlen(Arr[i_one]); i++)
+		{
+			printf("%c", Arr[i_one][i]);
+			temp[count++] = Arr[i_one][i];
 		}
-		else{
-			//printf("리턴이야 리턴\n");
-			return 0;
-		}
-		
-		//free(temp_Arr);
-		free(equal_index);
+
+	}
+	else {
+		//printf("리턴이야 리턴\n");
+		return 0;
+	}
+
+	//free(temp_Arr);
+	free(equal_index);
 	fflush(stdout);
 	return 0;
 
 }
 int double_tab() {
+	int oh = count - 1;
+	int temp_count = 0;
+	int temp_index = 0;
+	//printf("(%c)",temp[oh]);
+	if (temp[oh] == ' ')
+	{
+		oh--;
+
+	}
+	if (temp[oh] == '/')
+	{
+		for (int i = 1; i < oh; i++)
+		{
+			if (temp[oh - i] == ' ')
+			{
+				temp_index = oh - i;
+				break;
+			}
+			temp_count++;
+		}
+
+	}
+	char *dir;
+	dir = (char *)malloc(sizeof(char) * (temp_count + 1));
+	for (int i = 0; i < temp_count + 1; i++)
+	{
+		dir[i] = '\0';
+	}
+	for (int i = 0; i < temp_count; i++)
+	{
+		dir[i] = temp[temp_index + i + 1];
+	}
+	//printf("\n%s\n",dir);
+
+
 	DIR            *dir_info;
 	struct dirent  *dir_entry;
-	dir_info = opendir(".");              // 현재 디렉토리를 열기
+	if (temp_count > 0)
+	{
+		dir_info = opendir(dir);
+	}              // dir 디렉토리를 열기
+	else
+	{
+		dir_info = opendir(".");
+	}              // 현재 디렉토리를 열기
+	printf("\n");
 	if (NULL != dir_info)
 	{
 		while (dir_entry = readdir(dir_info))  // 디렉토리 안에 있는 모든 파일과 디렉토리 출력
@@ -476,7 +524,7 @@ int double_tab() {
 			{
 				continue;
 			}
-			printf("%s\t", dir_entry->d_name);
+			printf("%s  ", dir_entry->d_name);
 		}
 		closedir(dir_info);
 	}
@@ -497,17 +545,19 @@ int no_pipe_run_command(char *Arr[])
 	}
 	if (pid == 0)
 	{
-		parse_redirect(Arr);
-		//execl("/bin/ls","ls","-l",NULL);
-		execvp(Arr[0], Arr);
-		//execlp("ls", "ls -l", NULL);
-		printf("command not found\n");
+		execute_cmdgrp(Arr);
+		// parse_redirect(Arr);
+
+		// execvp(Arr[0], Arr);
+		// printf("command not found\n");
 		//perror("Child failed to exec ls");
 		return 1;
 	}
-	//if(AMPERSAND_count) break;
-	waitpid(pid, NULL, 0);
-	tcsetpgrp(STDIN_FILENO, getpgid(0)); //쉘을 초기화 할때 사용합니다.
+	if (!AMPERSAND_count)
+	{
+		waitpid(pid, NULL, 0);
+	}
+	//tcsetpgrp(STDIN_FILENO, getpgid(0)); //쉘을 초기화 할때 사용합니다.
 	fflush(stdout);
 	return 0;
 }
@@ -550,97 +600,208 @@ void parse_redirect(char* Arr[])
 	}
 
 }
-
-int one_pipe_run_command(char *Arr[], int command_index)
+void execute_cmd(char* Arr[],int ohoh)
 {
-	pid_t childpid;
-	int fd[2];
-	int pipe_index = 0;
+	int wow=0;
+	if(ohoh==0)
+	wow=command_index;
+	else
+	{
+		wow=ohoh;
+	}
+		//printf("\n(%d)\n",ohoh);
+	int fd;//리다이렉션 부분
+
+	for (int i = wow - 1; i >= 0; i--)
+	{
+		if (strcmp(Arr[i], "<") == 0)
+		{
+			if ((fd = open(Arr[i + 1], O_RDONLY | O_CREAT, 0644)) < 0)
+				perror("file open error");
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+			Arr[i] = NULL;
+			Arr[i + 1] = NULL;
+			wow = wow - 2;
+		}
+
+
+
+		else if (strcmp(Arr[i], ">") == 0)
+		{
+			if ((fd = open(Arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644)) < 0)
+				perror("file open error");
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+			Arr[i] = NULL;
+			Arr[i + 1] = NULL;
+			wow = wow - 2;
+
+		}
+
+
+
+
+
+	}
+
+
+	//printf("\n(%d)\n",wow);
+	if (wow == 1 && (strcmp(Arr[0], "ls") == 0))
+	{
+
+		DIR            *dir_info;
+		struct dirent  *dir_entry;
+		dir_info = opendir(".");              // 현재 디렉토리를 열기
+		if (NULL != dir_info)
+		{
+			while (dir_entry = readdir(dir_info))  // 디렉토리 안에 있는 모든 파일과 디렉토리 출력
+			{
+				if (strcmp(dir_entry->d_name, ".") == 0 || strcmp(dir_entry->d_name, "..") == 0)
+				{
+					continue;
+				}
+				printf("%s  ", dir_entry->d_name);
+			}
+			closedir(dir_info);
+		}
+		printf("\n");
+		exit(0);
+	}
+	else
+	{
+
+		execvp(Arr[0], Arr);
+		printf("command not found\n");
+	}
+}
+
+void execute_cmdgrp(char* Arr[])
+{
+	int i = 0;
+	int g_count = 0;
+	int pfd[2];
+
 	for (int i = 0; i < command_index; i++)
 	{
-		if (strcmp(Arr[i], "|") == 0) // 문자열 포인터 배열의 요소가 NULL이 아닐 때만
+		if (strcmp(Arr[i], "|") == 0)
+			g_count++;
+	}
+	int *equal_index;
+	equal_index = (int *)malloc(sizeof(int) * g_count);
+	int *pipe_count_index;
+	pipe_count_index = (int *)malloc(sizeof(int) * g_count);
+	for(int i=0;i<g_count;i++)
+	pipe_count_index[i]=0;
+	int oh_index = 0;
+	for (int i = 0; i < command_index; i++)
+	{
+		if (strcmp(Arr[i], "|") == 0)
 		{
-			pipe_index = i;
-			break;
-			//printf("test\n");
+			Arr[i] = NULL;
+			equal_index[oh_index] = i;
+			oh_index++;
 		}
 	}
-	char *first_Arr[10] = {
+	equal_index[oh_index] = command_index;
+	oh_index++;
+	char *pipe_Arr[100][100] = {
 		NULL,
 	};
-	char *second_Arr[10] = {
-		NULL,
-	};
-	for (int i = 0; i < pipe_index; i++)
+	for (int i = 0; i < 100; i++)
+		for (int j = 0; j < 100; j++)
+			pipe_Arr[i][j] = NULL;
+	for (int i = 0; i < oh_index; i++)
 	{
-		first_Arr[i] = Arr[i];
-	}
-	for (int i = pipe_index + 1; i < command_index; i++)
-	{
-		second_Arr[i] = Arr[i];
-	}
-	for (int i = 0; i < pipe_index; i++)
-	{
-		printf("%s ", first_Arr[i]);
-	}
-	printf("\n");
-	for (int i = pipe_index + 1; i < command_index; i++)
-	{
-		printf("%s ", second_Arr[i]);
-	}
-	printf("\n");
-	if ((pipe(fd) == -1) || ((childpid = fork()) == -1)) //파이프 생성 및 자식 프로세스 생성
-	{
-		perror("Failed to setup pipeline");
-		return 1;
-	}
-	if (childpid == 0) //자식인 경우
-	{
-		if (dup2(fd[1], STDOUT_FILENO) == -1) //표준 출력
-			perror("Failed to redirect stdout of ls");
-		else if ((close(fd[0]) == -1) || (close(fd[1]) == -1)) //
-			perror("Failed to close extra pipe descriptors on ls");
+		//printf("(%d)\n", equal_index[i]);
+		if (i == 0)
+		{
+			for (int j = 0; j < equal_index[0]; j++)
+				{
+					pipe_Arr[i][j] = Arr[j];
+					pipe_count_index[0]++;
+				}
+		}
 		else
 		{
-			//execl("/bin/ls", "ls", "-l", NULL);
-			execvp(first_Arr[0], first_Arr);
-			perror("Failed to exec ls");
-		}
-		return 1;
-	}
-	if (dup2(fd[0], STDIN_FILENO) == -1)
-		perror("Failed to redirect stdin of sort");
-	else if ((close(fd[0]) == -1) || (close(fd[1]) == -1))
-		perror("Failed to close extra pipe file descriptors on sort");
-	else
-	{
-		// printf("\ntest\n");
+			for (int j = 0; j < equal_index[i]-equal_index[i-1]-1; j++)
+			{
+				pipe_Arr[i][j] = Arr[j + equal_index[i - 1] + 1];
+							//printf("\nohoh(%s)\n",Arr[j + equal_index[i - 1] + 1]);
+							pipe_count_index[i]++;
 
-		//execl("/usr/bin/sort", "sort", "-k", "+4", NULL);
-		execvp(second_Arr[0], second_Arr);
-		perror("Failed to exec sort");
+			}
+		}
+//printf("pipe_count_index[%d](%d)\n",i,pipe_count_index[i]);
 	}
-	return 1;
-}
-int runcommand(char **cline)
-{
-	int pid;
-	int status;
-	switch (pid = fork())
+	
+	// for (int i = 0; i < command_index; i++)
+	// 	printf("%s ", Arr[i]);
+	// printf("\n");
+	// printf("(%d)\n", oh_index);
+	int k = 0;
+	// for (int i = 0; i < oh_index; i++)
+	// {
+	// 	k = 0;
+	// 	while (1)
+	// 	{
+	// 		if (pipe_Arr[i][k] == NULL)
+	// 			break;
+	// 		printf("%s ", pipe_Arr[i][k]);
+	// 		k++;
+	// 	}
+	// 	printf("\n");
+	// }
+	//fflush(stdout);
+	//printf("\n");
+	//printf("(%d)\n", g_count);
+
+	// 크기가 10인 문자열 포인터 배열을 선언하고 NULL로 초기화
+
+	// sigset_t set;
+
+	// setpgid(0,0);
+	// if(!AMPERSAND_count)
+	//     tcsetpgrp(STDIN_FILENO, getpid());
+
+	// sigfillset(&set);
+	// sigprocmask(SIG_UNBLOCK,&set,NULL);
+
+	// if((g_count = makeargv(cmdgrp, "|", cmdlist, MAX_CMD_LIST)) <= 0)
+	//     perror("makeargv_cmdgrp error");
+
+	free(equal_index);
+	int yes_i = 0;
+	if(g_count==0)
 	{
-	case -1:
-		perror("smallsh");
-		return (-1);
-	case 0:
-		//execvp(*cline, cline);
-		execl("bin/ls", "ls", "-l", NULL);
-		//perror(*cline);
-		exit(1);
+			execute_cmd(&Arr[0],0);
 	}
-	if (waitpid(pid, &status, 0) == -1)
-		return (-1);
-	else
-		return (status);
+	else{
+		//printf("\ntest\n");
+for(yes_i=0; yes_i<oh_index-1; yes_i++)
+	{
+		pipe(pfd);
+		switch(fork())
+		{
+			case -1: perror("fork error");
+	        case  0: close(pfd[0]);
+				dup2(pfd[1], STDOUT_FILENO);
+				//execvp(pipe_Arr[yes_i][0], pipe_Arr[yes_i]);
+					execute_cmd(pipe_Arr[yes_i],pipe_count_index[yes_i]);
+	            break;
+	        default: close(pfd[1]);
+	            dup2(pfd[0], STDIN_FILENO);
+		}
+	}
+				
+
+				//execvp(pipe_Arr[yes_i][0], pipe_Arr[yes_i]);
+				
+	execute_cmd(pipe_Arr[yes_i],pipe_count_index[yes_i]);
+	}
+	//printf("(%d)\n", oh_index);
+	
+
 }
 
 int getch(void)

@@ -1,0 +1,21 @@
+
+(2)
+total 164
+-rw-r--r-- 1 moon moon     0 Dec 18 02:33 hh
+-rw-r--r-- 1 moon moon     0 Dec 18 02:34 test
+-rw-rw-r-- 1 moon moon    10 Dec 17 06:32 file1
+-rw-rw-r-- 1 moon moon    10 Dec 17 06:32 file2
+-rw-rw-r-- 1 moon moon    10 Dec 17 06:32 file3
+-rw-rw-r-- 1 moon moon    10 Dec 17 06:32 file4
+-rw-r--r-- 1 moon moon   115 Dec 18 01:05 oh1
+-rw-r--r-- 1 moon moon   128 Dec 18 02:12 bb
+-rw-rw-r-- 1 moon moon 16720 Dec 18 02:32 project.c
+-rwxrwxr-x 1 moon moon 18712 Dec 18 02:33 a.out
+-rw-r--r-- 1 moon moon   307 Dec 18 02:33 oh23
+drwxrwxr-x 2 moon moon  4096 Dec 12 22:47 class_11_8
+drwxrwxr-x 2 moon moon  4096 Dec 12 22:47 class_9_20
+drwxrwxr-x 2 moon moon  4096 Dec 17 06:57 bravo1
+drwxrwxr-x 2 moon moon  4096 Dec 17 06:57 bravo2
+drwxrwxr-x 2 moon moon  4096 Dec 18 00:37 new
+-rw-r--r-- 1 moon moon   644 Dec 18 01:05 oh2
+-rw-r--r-- 1 moon moon   689 Dec 18 01:10 aa
