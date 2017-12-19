@@ -5,8 +5,8 @@ total 76
 -rw-r--r-- 1 moon moon    18 Dec 19 01:07 f
 -rw-r--r-- 1 moon moon    13 Dec 18 18:57 file
 -rw-r--r-- 1 moon moon    10 Dec 19 02:07 file1
--rw-r--r-- 1 moon moon     0 Dec 19 02:11 file2
+-rw-r--r-- 1 moon moon   487 Dec 19 02:09 file2
 -rw-r--r-- 1 moon moon     5 Dec 18 18:59 h
 drwxrwxr-x 7 moon moon  4096 Dec 18 18:56 new
--rw-r--r-- 1 moon moon   532 Dec 19 02:10 oh
+-rw-r--r-- 1 moon moon     0 Dec 19 02:10 oh
 -rw-rw-r-- 1 moon moon 15529 Dec 19 01:57 project.c

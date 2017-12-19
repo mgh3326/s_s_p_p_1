@@ -1,2 +1,10 @@
-adsf
-asdf
+  5145 pts/3    00:00:01 zsh
+  9710 pts/3    00:00:00 a.out
+  9765 pts/3    00:00:00 a.out
+  9842 pts/3    00:00:00 a.out
+  9870 pts/3    00:00:00 a.out
+  9893 pts/3    00:00:00 cat
+  9917 pts/3    00:00:00 a.out
+  9938 pts/3    00:00:00 sort
+  9939 pts/3    00:00:00 ps
+   PID TTY          TIME CMD
