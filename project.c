@@ -19,34 +19,56 @@ int double_tab();
 static char temp[500];
 static int AMPERSAND_count;
 int count;
+struct sigaction act;
+static int status;
 void execute_cmd(char* Arr[],int ohoh);
 void execute_cmdgrp(char* Arr[]);
+void zombie_handler(int signo)
+{
+    pid_t pid ;
+    int stat ;
+    
+    while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+        printf("\nchild %d terminated normaly\nUser Shall >>", pid) ;
+				fflush(stdout);
+
+}
+
 void signal_handler(int signo) {
 	if (signo == SIGINT)
 	{
-		printf("^C");
-		temp[count++] = '^';
-		temp[count++] = 'C';
-		fflush(stdout);
+		printf("\nSIGINT 시그널은 무시되었습니다.\n");
 	}
-};
+else if (signo == SIGQUIT)
+	{
+		printf("\nSIGQUIT 시그널은 무시되었습니다.\n");
+	}
+		printf("User Shall >>");
+
+		for(int i=0;i<count;i++)
+		printf("%c",temp[i]);
+		fflush(stdout);
+
+}
 static int command_index;
 int main(void)
 {
+	sigset_t set;
+	
+	sigfillset(&set);
+	sigdelset(&set,SIGCHLD);
+	sigprocmask(SIG_SETMASK,&set,NULL);
+    
+	act.sa_flags = SA_RESTART;
+	sigemptyset(&act.sa_mask);
+	act.sa_handler = zombie_handler;
+	sigaction(SIGCHLD, &act, 0);
 	int c;
-	//signal
-
-	// sigset_t blockset;             // 막아놓을 시그널 목록
-	// sigemptyset(&blockset);        //시그널 입력 자체를 무시하도록 하였습니다.
-	// sigaddset(&blockset, SIGINT);  //목록에 해당 ^C시그널 추가
-	// sigaddset(&blockset, SIGQUIT); //^\시그널 추가
-	// sigprocmask(SIG_BLOCK, &blockset, NULL);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 	while (1)
 	{
 		count = 0;
-		int blank_count = 0;
 		for (int i = 0; i < 500; i++)
 		{
 			temp[i] = '\0';
@@ -122,21 +144,7 @@ int main(void)
 					continue;
 
 				}
-				//c = getch();
-				// if (c == '\t')
-				// {
-				//    double_tab();
-				//    //c='\0';
-				//    continue;
-				// }
-				// else
-				// {
-				//     printf("%c", c);
-				//     temp[count] = c;
-				//     count++;
-				// }
 
-				//continue;
 			}
 			else if (c == 127)
 			{
@@ -233,31 +241,6 @@ int main(void)
 
 
 		no_pipe_run_command(command_Arr);
-
-		// if (pipe_count == 0)
-		// {
-		//     no_pipe_run_command(command_Arr);
-		// }
-		// else if (pipe_count == 1)
-		// {
-		//     one_pipe_run_command(command_Arr, command_index);
-		// }
-		// for(int i=0;i<strlen(input);i++)
-		// {
-		//     if(input[i]=' ')
-		//     {
-		//         blank_count++;
-		//     }
-		// printf("%c",input[i]);
-
-		// }
-		// printf("\nblank_count :(%d)\n",blank_count);
-		//printf("%s\n", input);
-
-		//runcommand(&input);
-		//no_pipe_run_command();
-
-		//fflush(stdout);
 		fflush(stdin);
 
 		free(input);
@@ -545,6 +528,10 @@ int no_pipe_run_command(char *Arr[])
 	}
 	if (pid == 0)
 	{
+		// if(!AMPERSAND_count)
+        //     {
+        //         setpgid(pid, 0); 
+        //     }
 		execute_cmdgrp(Arr);
 		// parse_redirect(Arr);
 
@@ -557,6 +544,7 @@ int no_pipe_run_command(char *Arr[])
 	{
 		waitpid(pid, NULL, 0);
 	}
+	
 	//tcsetpgrp(STDIN_FILENO, getpgid(0)); //쉘을 초기화 할때 사용합니다.
 	fflush(stdout);
 	return 0;
